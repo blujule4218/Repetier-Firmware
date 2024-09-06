@@ -143,7 +143,9 @@ Raspberry Serial: Serial2
 #define PS_ON_PIN PE11
 #define POWER_LOSS_PIN PC0 // PWRDET
 #define STATUS_LED_PIN PA13
+#ifndef TMC_SW_SERIAL_BAUD
 #define TMC_SW_SERIAL_BAUD 19200 // Software serial baud rate
+#endif
 
 #ifndef TWI_CLOCK_FREQ
 // #define TWI_CLOCK_FREQ 400000

@@ -9,6 +9,10 @@
 #define LEVELING_CORRECTOR 0
 #endif
 
+#if LEVELING_CORRECTOR == LEVELING_CORRECTOR_DELTA_ENDSTOPS && PRINTER_TYPE != PRINTER_TYPE_DELTA
+#error Wrong leveling corrector LEVELING_CORRECTOR_DELTA_ENDSTOPS - only allowed for delta printers
+#endif
+
 #if ENABLE_BUMP_CORRECTION && LEVELING_METHOD != LEVELING_METHOD_GRID
 #undef ENABLE_BUMP_CORRECTION
 #define ENABLE_BUMP_CORRECTION 0 // Disable if not supported
@@ -20,13 +24,23 @@ class Plane;
 
 class LevelingCorrector {
 public:
-    inline static void init() {}
-    inline static void handleEeprom() {}
-    inline static void resetEeprom() {}
+    inline static void init() { }
+    inline static void handleEeprom() { }
+    inline static void resetEeprom() { }
     static void correct(Plane* plane);
 };
 
 #elif LEVELING_CORRECTOR == LEVELING_CORRECTOR_MOTOR // Motorized correction
+
+class LevelingCorrector {
+public:
+    static void init();
+    static void handleEeprom();
+    static void resetEeprom();
+    static void correct(Plane* plane);
+};
+
+#elif LEVELING_CORRECTOR == LEVELING_CORRECTOR_DELTA_ENDSTOPS // adjust end stops for delta printer
 
 class LevelingCorrector {
 public:
@@ -42,20 +56,20 @@ public:
 
 class Leveling {
 public:
-    inline static void addDistortion(float* pos) {}
-    inline static void subDistortion(float* pos) {}
-    inline static void setDistortionEnabled(bool newState) {}
+    inline static void addDistortion(float* pos) { }
+    inline static void subDistortion(float* pos) { }
+    inline static void setDistortionEnabled(bool newState) { }
     inline static bool isDistortionEnabled() { return false; }
     inline static float distortionAt(float xp, float yp) { return 0; }
-    static void importBumpMatrix(char* filename) {}
-    static void exportBumpMatrix(char* filename) {}
+    static void importBumpMatrix(char* filename) { }
+    static void exportBumpMatrix(char* filename) { }
     inline static bool measure(GCode* com) { return true; }
-    inline static void init() {}
-    inline static void handleEeprom() {}
-    inline static void resetEeprom() {}
+    inline static void init() { }
+    inline static void handleEeprom() { }
+    inline static void resetEeprom() { }
     inline static bool execute_G32(GCode* com) { return true; }
-    inline static void execute_G33(GCode* com) {}
-    inline static void execute_M323(GCode* com) {}
+    inline static void execute_G33(GCode* com) { }
+    inline static void execute_M323(GCode* com) { }
 };
 
 #elif LEVELING_METHOD == LEVELING_METHOD_GRID // Grid leveling
@@ -110,13 +124,13 @@ public:
     static void exportBumpMatrix(char* filename);
     static void execute_M323(GCode* com);
 #else
-    inline static void addDistortion(float* pos) {}
-    inline static void subDistortion(float* pos) {}
+    inline static void addDistortion(float* pos) { }
+    inline static void subDistortion(float* pos) { }
     inline static bool isDistortionEnabled() { return false; }
-    inline static void execute_M323(GCode* com) {}
+    inline static void execute_M323(GCode* com) { }
     inline static float distortionAt(float xp, float yp) { return 0.0f; }
-    static void importBumpMatrix(char* filename) {}
-    static void exportBumpMatrix(char* filename) {}
+    static void importBumpMatrix(char* filename) { }
+    static void exportBumpMatrix(char* filename) { }
 #endif
     static void reportDistortionStatus();
     static bool measure(GCode* com);
@@ -132,40 +146,40 @@ public:
 
 class Leveling {
 public:
-    inline static void addDistortion(float* pos) {}
-    inline static void subDistortion(float* pos) {}
-    inline static void setDistortionEnabled(bool newState) {}
+    inline static void addDistortion(float* pos) { }
+    inline static void subDistortion(float* pos) { }
+    inline static void setDistortionEnabled(bool newState) { }
     inline static bool isDistortionEnabled() { return false; }
     inline static float distortionAt(float xp, float yp) { return 0; }
     static bool measure(GCode* com);
-    static void importBumpMatrix(char* filename) {}
-    static void exportBumpMatrix(char* filename) {}
-    inline static void init() {}
-    inline static void handleEeprom() {}
-    inline static void resetEeprom() {}
+    static void importBumpMatrix(char* filename) { }
+    static void exportBumpMatrix(char* filename) { }
+    inline static void init() { }
+    inline static void handleEeprom() { }
+    inline static void resetEeprom() { }
     static bool execute_G32(GCode* com);
-    inline static void execute_G33(GCode* com) {}
-    inline static void execute_M323(GCode* com) {}
+    inline static void execute_G33(GCode* com) { }
+    inline static void execute_M323(GCode* com) { }
 };
 
 #elif LEVELING_METHOD == LEVELING_METHOD_3_POINTS // 3 points
 
 class Leveling {
 public:
-    inline static void addDistortion(float* pos) {}
-    inline static void subDistortion(float* pos) {}
-    inline static void setDistortionEnabled(bool newState) {}
+    inline static void addDistortion(float* pos) { }
+    inline static void subDistortion(float* pos) { }
+    inline static void setDistortionEnabled(bool newState) { }
     inline static bool isDistortionEnabled() { return false; }
     inline static float distortionAt(float xp, float yp) { return 0; }
     static bool measure(GCode* com);
-    static void importBumpMatrix(char* filename) {}
-    static void exportBumpMatrix(char* filename) {}
-    inline static void init() {}
-    inline static void handleEeprom() {}
-    inline static void resetEeprom() {}
+    static void importBumpMatrix(char* filename) { }
+    static void exportBumpMatrix(char* filename) { }
+    inline static void init() { }
+    inline static void handleEeprom() { }
+    inline static void resetEeprom() { }
     static bool execute_G32(GCode* com);
-    inline static void execute_G33(GCode* com) {}
-    inline static void execute_M323(GCode* com) {}
+    inline static void execute_G33(GCode* com) { }
+    inline static void execute_M323(GCode* com) { }
 };
 
 #else

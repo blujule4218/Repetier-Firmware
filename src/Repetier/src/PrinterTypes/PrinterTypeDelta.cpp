@@ -383,6 +383,9 @@ float PrinterType::CPosX, PrinterType::CPosY;
 float PrinterType::homeOffsetA, PrinterType::homeOffsetB, PrinterType::homeOffsetC;
 uint16_t PrinterType::eeprom; // start position eeprom
 PrinterType::MotionMode PrinterType::mode = PrinterType::MotionMode::MOTION_DELTA;
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+float PrinterType::bedXMin, PrinterType::bedXMax, PrinterType::bedYMin, PrinterType::bedYMax;
+#endif
 
 void PrinterType::setMotionMode(MotionMode newMode) {
     if (mode == newMode) {
@@ -491,7 +494,7 @@ bool PrinterType::positionAllowed(float pos[NUM_AXES], float zOfficial) {
         return true;
     }
     // Extra contraint to protect Z conditionbased on official coordinate system
-    if (zOfficial < Motion1::minPos[Z_AXIS] - 0.01 || zOfficial > Motion1::maxPos[Z_AXIS] + 0.01) {
+    if (zOfficial < Motion1::minPos[Z_AXIS] - 0.01 || zOfficial > Motion1::maxPos[Z_AXIS] + 0.01 + Motion1::homeEndstopDistance[Z_AXIS]) {
         return false;
     }
     /*if (pos[Z_AXIS] < Motion1::minPosOff[Z_AXIS] || pos[Z_AXIS] > Motion1::maxPosOff[Z_AXIS]) {
@@ -499,20 +502,42 @@ bool PrinterType::positionAllowed(float pos[NUM_AXES], float zOfficial) {
     } */
     float px = pos[X_AXIS]; // + Motion1::toolOffset[X_AXIS]; // need to consider tool offsets
     float py = pos[Y_AXIS]; // + Motion1::toolOffset[Y_AXIS];
-    return px * px + py * py <= printRadiusSquared;
+    bool ok = px * px + py * py <= printRadiusSquared;
+    for (int i = A_AXIS; i < NUM_AXES; i++) {
+        ok &= (pos[i] >= Motion1::minPos[i] - 0.01 && pos[i] <= Motion1::maxPos[i] + 0.01);
+    }
+    // #if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    //     ok &= (px >= bedXMin && px <= bedXMax && py >= bedYMin && py <= bedYMax);
+    // #endif
+    return ok;
 }
 
 void PrinterType::closestAllowedPositionWithNewXYOffset(float pos[NUM_AXES], float offX, float offY, float safety) {
     // offX and offY are with sign as stored in tool not when assigned later!
     // pos is in official coordinate system
-    float offsets[2] = { offX, offY };
+    float offsets[3] = { offX, offY, 0 };
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    for (fast8_t i = 0; i <= Z_AXIS; i++) {
+        float tOffMin, tOffMax;
+        Tool::minMaxOffsetForAxis(i, tOffMin, tOffMax);
+
+        float p = pos[i] - offsets[i];
+        float minP = Motion1::minPos[i] + safety - tOffMax;
+        float maxP = Motion1::maxPos[i] - safety - tOffMin;
+        if (p < minP) {
+            pos[i] += minP - p;
+        } else if (p > maxP) {
+            pos[i] -= p - maxP;
+        }
+    }
+#else
     float tOffMin, tOffMax;
     float tPos[2], t2Pos[2];
     for (int loop = 0; loop < 3; loop++) { // can need 2 iterations to be valid!
         float dist = 0, dist2 = 0, distbed = 0;
         for (fast8_t i = 0; i < Z_AXIS; i++) {
-            tPos[i] = pos[i] - offsets[i];
-            t2Pos[i] = pos[i] + Motion1::toolOffset[i];
+            tPos[i] = pos[i] - offsets[i];              // probe offset
+            t2Pos[i] = pos[i] + Motion1::toolOffset[i]; // tool offset
             dist += tPos[i] * tPos[i];
             dist2 += t2Pos[i] * t2Pos[i]; // current tool offset
             distbed += pos[i] * pos[i];
@@ -523,8 +548,8 @@ void PrinterType::closestAllowedPositionWithNewXYOffset(float pos[NUM_AXES], flo
             if (fac >= 1.0f) { // inside bed, nothing to do
                 return;
             }
-            pos[X_AXIS] = tPos[X_AXIS] * fac;
-            pos[Y_AXIS] = tPos[Y_AXIS] * fac;
+            pos[X_AXIS] *= fac;
+            pos[Y_AXIS] *= fac;
         } else if (dist > dist2 && (printRadius - safety) / sqrt(dist) < 1.001) {
             dist = sqrtf(dist);
             float fac = (printRadius - safety) / dist;
@@ -547,17 +572,29 @@ void PrinterType::closestAllowedPositionWithNewXYOffset(float pos[NUM_AXES], flo
             pos[Y_AXIS] = t2Pos[Y_AXIS] - Motion1::toolOffset[Y_AXIS];
         }
     }
+#endif
 }
 
 bool PrinterType::positionOnBed(float pos[2]) {
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    return pos[X_AXIS] >= bedXMin && pos[X_AXIS] <= bedXMax && pos[Y_AXIS] >= bedYMin && pos[Y_AXIS] <= bedYMax;
+#else
     return pos[X_AXIS] * pos[X_AXIS] + pos[Y_AXIS] * pos[Y_AXIS] <= bedRadius * bedRadius;
+#endif
 }
 
 void PrinterType::getBedRectangle(float& xmin, float& xmax, float& ymin, float& ymax) {
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    xmin = bedXMin;
+    xmax = bedXMax;
+    ymin = bedYMin;
+    ymax = bedYMax;
+#else
     xmin = -bedRadius;
     xmax = bedRadius;
     ymin = -bedRadius;
     ymax = bedRadius;
+#endif
 }
 
 void PrinterType::M360() {
@@ -646,6 +683,12 @@ void PrinterType::eepromHandle() {
     EEPROM::handleFloat(eeprom + 4, PSTR("Horizontal Radius [mm]"), 3, horizontalRadius);
     EEPROM::handleFloat(eeprom + 8, PSTR("Printable Radius [mm]"), 2, printRadius);
     EEPROM::handleFloat(eeprom + 60, PSTR("Bed Radius [mm]"), 2, bedRadius);
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    EEPROM::handleFloat(eeprom + 64, PSTR("Bed X Min [mm]"), 2, bedXMin);
+    EEPROM::handleFloat(eeprom + 68, PSTR("Bed X Max [mm]"), 2, bedXMax);
+    EEPROM::handleFloat(eeprom + 72, PSTR("Bed Y Min [mm]"), 2, bedYMin);
+    EEPROM::handleFloat(eeprom + 76, PSTR("Bed Y Max [mm]"), 2, bedYMax);
+#endif
     EEPROM::handleFloat(eeprom + 12, PSTR("Angle A [mm]"), 3, angleA);
     EEPROM::handleFloat(eeprom + 16, PSTR("Angle B [mm]"), 3, angleB);
     EEPROM::handleFloat(eeprom + 20, PSTR("Angle C [mm]"), 3, angleC);
@@ -678,12 +721,22 @@ void PrinterType::restoreFromConfiguration() {
     homeOffsetB = DELTA_HOME_OFFSET_B;
     homeOffsetC = DELTA_HOME_OFFSET_C;
     bedRadius = BED_RADIUS;
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    bedXMin = DELTA_X_MIN;
+    bedXMax = DELTA_X_MAX;
+    bedYMin = DELTA_Y_MIN;
+    bedYMax = DELTA_Y_MAX;
+#endif
     PrinterType::updateDerived();
 }
 
 void PrinterType::init() {
     PrinterType::restoreFromConfiguration();
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    eeprom = EEPROM::reserve(EEPROM_SIGNATURE_DELTA, 1, 20 * 4);
+#else
     eeprom = EEPROM::reserve(EEPROM_SIGNATURE_DELTA, 1, 16 * 4);
+#endif
 }
 
 void PrinterType::updateDerived() {

@@ -551,6 +551,7 @@ void __attribute__((weak)) GCode_32(GCode* com) {
         }
         Leveling::setDistortionEnabled(oldDistortion);
     }
+    ZProbeHandler::deactivate();
     if (!ok) {
         GCode::fatalError(PSTR("Leveling failed!"));
     }

@@ -730,6 +730,9 @@ void Commands::processMCode(GCode* com) {
     case 303: // M303
         MCode_303(com);
         break;
+    case 319: // M319 scale using autolevel matrix
+        MCode_319(com);
+        break;
     case 320: // M320 Activate autolevel
         MCode_320(com);
         break;

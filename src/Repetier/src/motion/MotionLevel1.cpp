@@ -1968,6 +1968,9 @@ bool Motion1::simpleHome(fast8_t axis) {
 #ifdef DEBUG_MOVES
     Com::printFLN(PSTR("simpleHome started:"), static_cast<int32_t>(axis));
 #endif
+#ifdef BEFORE_SIMPLE_HOME
+BEFORE_SIMPLE_HOME
+#endif
     if (homeDir[axis] == 0) { // nothing to do, just set to min
         setAxisHomed(axis, true);
         Motion1::g92Offsets[axis] = 0;
@@ -1995,6 +1998,9 @@ bool Motion1::simpleHome(fast8_t axis) {
     Motion1::axesTriggered = 0;
     eStop.resetHistory();
     if (!eStop.update()) { // don't test if we are still there
+#ifdef DEBUG_MOVES
+        Com::printFLN(PSTR("first homing move:"), dest[axis]);
+#endif
         moveRelativeByOfficial(dest, homingFeedrate[axis], false);
         waitForEndOfMoves();
         if (!eStop.historyWasTriggered()) { // endstop should be triggered now
@@ -2010,6 +2016,9 @@ bool Motion1::simpleHome(fast8_t axis) {
 
     // Move back for retest
     if (ok && homeRetestDistance[axis] > 0) {
+#ifdef DEBUG_MOVES
+        Com::printFLN(PSTR("second homing move:"), homeRetestDistance[axis]);
+#endif
         endstopMode = EndstopMode::DISABLED;
         eStop.resetHistory();
         dest[axis] = -homeDir[axis] * homeRetestDistance[axis];
@@ -2023,6 +2032,9 @@ bool Motion1::simpleHome(fast8_t axis) {
         Motion1::axesTriggered = 0;
         if (eStop.historyWasUntriggered()) {
             eStop.resetHistory();
+#ifdef DEBUG_MOVES
+            Com::printFLN(PSTR("third homing move:"), dest[axis]);
+#endif
             moveRelativeByOfficial(dest, homingFeedrate[axis] / homeRetestReduction[axis], false);
             waitForEndOfMoves();
             if (!eStop.historyWasTriggered()) { // endstop should be triggered now

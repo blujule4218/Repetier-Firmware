@@ -158,6 +158,8 @@ Custom M Codes
 - M302 S<0 or 1> - allow cold extrusion. Without S parameter it will allow. S1 will allow, S0 will disallow.
 - M303 P or T<extruder/bed> S<printTemerature> X0 R<Repetitions> C<method>- Auto detect pid values. Use P<NUM_EXTRUDER> for heated bed. X0 saves result in EEPROM. R is number of cycles.
 				method 0 = classic, 1 = some overshoot, 2 = no overshoot, 3 = Pessen, 4 = Tyreus-Lyben
+- M319 X<sx> Y<sy> Z<sz> S<0/1> - Set diagonal values in Transformation S1 stores it in eeprom
+- M319 P<pos> V<value> S<0/1> - Set transformation matrix position P with V, S1 stores it in eeprom
 - M320 S<0/1> - Activate auto level, S1 stores it in eeprom
 - M321 S<0/1> - Deactivate auto level, S1 stores it in eeprom
 - M322 - Reset auto level matrix

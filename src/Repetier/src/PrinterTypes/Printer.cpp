@@ -218,7 +218,12 @@ void Printer::setFanSpeed(int speed, bool immediately, int fanId, uint32_t timeo
     Com::printFLN(Com::tColon, speed);
     if (activeTool != nullptr && activeTool->usesSecondary(fans[fanId].fan)) {
         tool = activeTool;
-        tool->setSecondaryFixed(speed);
+        // tool->setSecondaryFixed(speed);
+        for (fast8_t i = 0; i < NUM_TOOLS; i++) {
+            if (Tool::getTool(i) && Tool::getTool(i)->usesSecondary(fans[fanId].fan)) {
+                Tool::getTool(i)->setSecondaryFixed(speed);
+            }
+        }
         if (!immediately && Motion1::buffersUsed()) {
             return;
         }
@@ -554,6 +559,9 @@ void Printer::setup() {
     // HAL::serialSetBaudrate(115200);
     // Start serial
     HAL::hwSetup();
+#ifdef DELAY_STARTUP_MS
+    HAL::delayMilliseconds(DELAY_STARTUP_MS);
+#endif
 #if defined(SAFE_POWER_PIN) && SAFE_POWER_PIN > -1
     SET_OUTPUT(SAFE_POWER_PIN);
     WRITE(SAFE_POWER_PIN, HIGH);

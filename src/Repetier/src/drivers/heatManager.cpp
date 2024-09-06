@@ -234,7 +234,7 @@ void HeatManager::update() {
     }
     // Test for decoupled HeaterError
 
-    float tempError = targetTemperature - currentTemperature;
+    float tempError = targetTemperature - currentTemperature; // > 0 = below target
     if (decouplePeriod > 0 && (decoupleMode == DecoupleMode::HOLDING || time - lastDecoupleTest > decouplePeriod)) {
         // we should do a test
         if (decoupleMode == DecoupleMode::FAST_RISING) {
@@ -277,9 +277,16 @@ void HeatManager::update() {
         }
         lastDecoupleTest = time;
     }
+    // switch from cooling/fast rising only if we are already rising
     if ((decoupleMode == DecoupleMode::FAST_RISING || decoupleMode == DecoupleMode::COOLING) && fabs(tempError) < decoupleVariance) {
-        lastDecoupleTest = time;
-        decoupleMode = DecoupleMode::HOLDING;
+        if (decoupleMode == DecoupleMode::FAST_RISING) {
+            if (currentTemperature > startTemperature + 1.0) {
+                lastDecoupleTest = time;
+                decoupleMode = DecoupleMode::HOLDING;
+            }
+        } else if (decoupleMode == DecoupleMode::COOLING) {
+            decoupleMode = DecoupleMode::HOLDING;
+        }
     }
 
     // Control heater
@@ -293,7 +300,7 @@ void HeatManager::update() {
             } else {
                 decoupleMode = DecoupleMode::FAST_RISING;
                 lastDecoupleTest = HAL::timeInMilliseconds();
-                lastDecoupleTemp = currentTemperature;
+                startTemperature = lastDecoupleTemp = currentTemperature;
             }
             return;
         }
@@ -406,7 +413,7 @@ void HeatManager::reportTemperature(char c, int idx) {
         Com::print('B');
     }
     Com::print('@');
-    if (idx > 0 || (idx == 0 && c == 'B')) {
+    if (idx >= 0 || (idx == 0 && c == 'B')) {
         Com::print(idx);
     }
     Com::print(':');

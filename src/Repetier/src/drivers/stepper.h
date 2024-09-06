@@ -77,6 +77,7 @@ public:
     virtual bool hasConfigMenu() { return false; }
     // Allow having own settings e.g. current, microsteps
     virtual void eepromHandle() { }
+    bool getDir() { return direction; }
     int motorIndex();
     void printMotorName();
 };

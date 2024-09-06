@@ -145,6 +145,29 @@ void LevelingCorrector::correct(Plane* plane) {
     }
 }
 
+#elif LEVELING_CORRECTOR == LEVELING_CORRECTOR_DELTA_ENDSTOPS // adjust end stops for delta printer
+
+void LevelingCorrector::init() { }
+void LevelingCorrector::handleEeprom() { }
+void LevelingCorrector::resetEeprom() { }
+void LevelingCorrector::correct(Plane* plane) {
+    float h1 = plane->z(PrinterType::APosX, PrinterType::APosY);
+    float h2 = plane->z(PrinterType::BPosX, PrinterType::BPosY);
+    float h3 = plane->z(PrinterType::CPosX, PrinterType::CPosY);
+    float h1c = h1 + PrinterType::homeOffsetA;
+    float h2c = h2 + PrinterType::homeOffsetB;
+    float h3c = h3 + PrinterType::homeOffsetC;
+    float minH = (h1c < h2c ? h1c : h2c);
+    minH = (minH < h3c ? minH : h3c);
+    PrinterType::homeOffsetA = h1c - minH;
+    PrinterType::homeOffsetB = h2c - minH;
+    PrinterType::homeOffsetC = h3c - minH;
+    Motion1::resetTransformationMatrix(true);
+    EEPROM::markChanged();
+    Motion1::currentPositionTransformed[Z_AXIS] = (h1 + h2 + h3) / 3;
+    Motion1::updatePositionsFromCurrentTransformed();
+}
+
 #endif
 
 #if LEVELING_METHOD == LEVELING_METHOD_GRID // Grid

@@ -50,7 +50,11 @@ bool PrinterType::positionAllowed(float pos[NUM_AXES], float zOfficial) {
             }
         }
     }
-    return true;
+    bool ok = true;
+    for (int i = A_AXIS; i < NUM_AXES; i++) {
+        ok &= (pos[i] >= Motion1::minPos[i] - 0.01 && pos[i] <= Motion1::maxPos[i] + 0.01);
+    }
+    return ok;
 }
 
 void PrinterType::closestAllowedPositionWithNewXYOffset(float pos[NUM_AXES], float offX, float offY, float safety) {

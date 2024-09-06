@@ -1677,6 +1677,7 @@ void TMCStepper2209Driver<stepCls, dirCls, enableCls, fclk>::reset(uint16_t _mic
 template <class stepCls, class dirCls, class enableCls, uint32_t fclk>
 void TMCStepper2209Driver<stepCls, dirCls, enableCls, fclk>::timer500ms() {
     if (!initSucceded) {
+        Com::printFLN(PSTR("TMC init failed!"));
         init();
     }
 #ifndef IGNORE_TMC2209_FEEDBACK

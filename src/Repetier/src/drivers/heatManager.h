@@ -48,6 +48,7 @@ protected:
     HeaterError error;
     float targetTemperature;
     float currentTemperature;
+    float startTemperature; // Temperature when heating started
     float maxTemperature;
     float minTemperature;
     IOTemperature* input;
@@ -92,12 +93,17 @@ public:
         // if (temp <= ((flags & FLAG_HEATMANAGER_FREEZER) == 0 ? getOffTemperature() : -200)) {
         if (temp <= getOffTemperature()) {
             decoupleMode = DecoupleMode::NO_HEATING;
+        } else if (fabs(temp - currentTemperature) < 0.5 * decoupleVariance) {
+            decoupleMode = DecoupleMode::HOLDING;
+            lastDecoupleTest = HAL::timeInMilliseconds();
         } else if (temp < currentTemperature) {
             decoupleMode = DecoupleMode::COOLING;
+            lastDecoupleTest = HAL::timeInMilliseconds();
+            startTemperature = lastDecoupleTemp = currentTemperature;
         } else {
             decoupleMode = DecoupleMode::FAST_RISING;
             lastDecoupleTest = HAL::timeInMilliseconds();
-            lastDecoupleTemp = currentTemperature;
+            startTemperature = lastDecoupleTemp = currentTemperature;
         }
         targetTemperature = temp;
     }

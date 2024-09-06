@@ -702,6 +702,12 @@ void __attribute__((weak)) MCode_114(GCode* com) {
         Com::printF(PSTR(" AS:"), Motion2::lastMotorPos[Motion2::lastMotorIdx][A_AXIS]);
 #endif
     }
+    if (com->hasD()) {
+        Com::printF(PSTR(" LD:"), (int)Motion3::lastDirection);
+        if (A_AXIS < NUM_AXES) {
+            Com::printF(PSTR(" ADIR:"), (int)Motion1::motors[A_AXIS]->getDir());
+        }
+    }
     Com::println();
 }
 
@@ -1358,6 +1364,33 @@ void __attribute__((weak)) MCode_321(GCode* com) {
 #endif
 }
 
+void __attribute__((weak)) MCode_319(GCode* com) {
+#if LEVELING_METHOD > 0
+    if (com->hasX()) {
+        Motion1::autolevelTransformation[0] = com->X;
+    }
+    if (com->hasY()) {
+        Motion1::autolevelTransformation[4] = com->Y;
+    }
+    if (com->hasZ()) {
+        Motion1::autolevelTransformation[8] = com->Z;
+    }
+    if (com->hasP() && com->P >= 0 && com->P < 9 && com->hasV()) {
+        Motion1::autolevelTransformation[com->P] = com->V;
+    }
+    Motion1::updateRotMinMax();
+
+    if (com->hasS() && com->S) {
+        EEPROM::markChanged();
+    }
+    Com::printArrayFLN(Com::tTransformationMatrix, Motion1::autolevelTransformation, 9, 6);
+    if (Motion1::isAutolevelActive()) {
+        Com::printInfoFLN(Com::tAutolevelEnabled);
+    } else {
+        Com::printInfoFLN(Com::tAutolevelDisabled);
+    }
+#endif
+}
 void __attribute__((weak)) MCode_322(GCode* com) {
 #if LEVELING_METHOD > 0
     Motion1::resetTransformationMatrix(false);

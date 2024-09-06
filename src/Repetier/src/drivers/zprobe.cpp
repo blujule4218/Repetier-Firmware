@@ -67,6 +67,10 @@ bool ZProbeHandler::activate() {
     Motion1::setToolOffset(-offsetX, -offsetY, 0);
     Motion1::setHardwareEndstopsAttached(true, ZProbe);
     activated = true;
+#ifdef Z_PROBE_ACTIVATION_OUTPUT
+    Z_PROBE_ACTIVATION_OUTPUT::on();
+    HAL::delayMilliseconds(500);
+#endif
     if (pauseHeaters) {
         bool set = false;
         for (size_t i = 0; i < NUM_HEATERS; i++) {
@@ -100,6 +104,10 @@ void ZProbeHandler::deactivate() {
     Motion1::setToolOffset(-tool->getOffsetX(), -tool->getOffsetY(), -tool->getOffsetZ());
     Motion1::moveByOfficial(cPos, Motion1::moveFeedrate[X_AXIS], false);
     activated = false;
+#ifdef Z_PROBE_ACTIVATION_OUTPUT
+    Z_PROBE_ACTIVATION_OUTPUT::off();
+    HAL::delayMilliseconds(500);
+#endif
     Printer::setZProbingActive(false);
     if (pauseHeaters) {
         for (size_t i = 0; i < NUM_HEATERS; i++) {

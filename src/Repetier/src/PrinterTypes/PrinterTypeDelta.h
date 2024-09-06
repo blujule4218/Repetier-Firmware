@@ -19,8 +19,10 @@
 #if PRINTER_TYPE == PRINTER_TYPE_DELTA
 
 class DeltaCalibrator;
+class LevelingCorrector;
 class PrinterType {
     friend class DeltaCalibrator;
+    friend class LevelingCorrector;
     enum class MotionMode {
         MOTION_DELTA = 0,
         MOTION_PER_AXIS = 1
@@ -45,7 +47,9 @@ class PrinterType {
 
     static bool homeZ();
     static bool untriggerEndstops();
-
+#if defined(DELTA_WITH_RECTANGULAR_BED) && DELTA_WITH_RECTANGULAR_BED
+    static float bedXMin, bedXMax, bedYMin, bedYMax;
+#endif
 public:
     // Are subdivisions required due to nonlinear kinematics
     static bool subdivisionsRequired() {
