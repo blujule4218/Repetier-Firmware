@@ -24,6 +24,7 @@ IO_OUTPUT(name, pin)
 IO_OUTPUT_INVERTED(name, pin)
 IO_OUTPUT_FAKE(name)
 IO_OUTPUT_LOG(name, output, changeOnly)
+IO_OUTPUT_SPLIT2(name, output1, output2)
 
 */
 
@@ -35,6 +36,7 @@ IO_OUTPUT_LOG(name, output, changeOnly)
 #undef IO_OUTPUT_INVERTED
 #undef IO_OUTPUT_FAKE
 #undef IO_OUTPUT_LOG
+#undef IO_OUTPUT_SPLIT2
 #undef IO_STRING
 
 #if IO_TARGET == IO_TARGET_INIT // Init pins
@@ -102,6 +104,23 @@ IO_OUTPUT_LOG(name, output, changeOnly)
         inline static void off() { set(false); } \
     };
 
+#define IO_OUTPUT_SPLIT2(name, output1, output2) \
+    class name { \
+    public: \
+        inline static void set(fast8_t val) { \
+            output1::set(val); \
+            output2::set(val); \
+        } \
+        inline static void on() { \
+            output1::on(); \
+            output2::on(); \
+        } \
+        inline static void off() { \
+            output1::off(); \
+            output2::off(); \
+        } \
+    };
+
 #define IO_STRING(name, text) \
     extern PGM_P const PROGMEM name;
 
@@ -127,6 +146,9 @@ IO_OUTPUT_LOG(name, output, changeOnly)
 #endif
 #ifndef IO_OUTPUT_LOG
 #define IO_OUTPUT_LOG(name, output, changeOnly)
+#endif
+#ifndef IO_OUTPUT_SPLIT2
+#define IO_OUTPUT_SPLIT2(name, output1, output2)
 #endif
 #ifndef IO_STRING
 #define IO_STRING(name, text)
