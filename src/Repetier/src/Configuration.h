@@ -57,6 +57,7 @@
 #define RFSERIAL SerialUSB
 #define BLUETOOTH_SERIAL -1
 #define JSON_OUTPUT 1
+#define FEATURE_Z_PROBE true
 #define FEATURE_SERVO 0
 #define FEATURE_WATCHDOG 1
 #define FEATURE_RETRACTION 1
@@ -115,7 +116,8 @@
 #define LC_WAIT_BED_REMOVE 2
 // Uncomment to limit correction per autoleveling iteration. Value is the max. correction in mm
 // #define LIMIT_MOTORIZED_CORRECTION 0.5
-#define Z_PROBE_TYPE Z_PROBE_TYPE_BLTOUCH
+#define Z_PROBE_TYPE 3
+#define Z_PROBE_AS_ENDSTOP true
 #define Z_PROBE_HEIGHT 5        // Distance bed-nozzle when trigger switches
 #define Z_PROBE_BED_DISTANCE 10 // Optimal starting distance
 #define Z_PROBE_SPEED 5         // Speed fo z testing
@@ -261,9 +263,9 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
 // All fans in this list list become controllable with M106/M107
 // by selecteing the fan number with P0..P<NUM_FANS-1>
-#define NUM_FANS 1
+#define NUM_FANS 2
 #define FAN_LIST \
-    { &Fan1PWM }
+    { &Fan1PWM, &BoardFan }
 
 #define NUM_HEATED_BEDS 1
 #define HEATED_BED_LIST \
@@ -334,9 +336,9 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define X_HOME_DIR -1
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR 1
-#define X_MAX_LENGTH 200
+#define X_MAX_LENGTH 198
 #define Y_MAX_LENGTH 194
-#define Z_MAX_LENGTH 220
+#define Z_MAX_LENGTH 210
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0

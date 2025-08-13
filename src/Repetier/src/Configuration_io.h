@@ -53,17 +53,16 @@ IO_OUTPUT(IOE2Step, ORIG_E1_STEP_PIN)
 IO_OUTPUT_INVERTED(IOE2Dir, ORIG_E1_DIR_PIN)
 IO_OUTPUT_INVERTED(IOE2Enable, ORIG_E1_ENABLE_PIN)
 
-// Servo output
-
-IO_OUTPUT(Servo1Pin, 5)
+// ZProbe Servo and trigger input and output
 
 // Define your endstops inputs
+IO_INPUT_PULLUP(IOEndstopZProbe, ORIG_Z_MIN_PIN)
 
-//IO_INPUT(IOEndstopXMin, ORIG_X_MIN_PIN)
  IO_INPUT_INVERTED(IOEndstopXMin, ORIG_X_MIN_PIN)
 IO_INPUT_INVERTED(IOEndstopYMin, ORIG_Y_MIN_PIN)
-//IO_INPUT_PULLUP(IOEndstopZMin, ORIG_Z_MIN_PIN)
 IO_INPUT_INVERTED_PULLUP(IOEndstopZMax, ORIG_Z_MAX_PIN)
+IO_INPUT_PULLUP(IOEndstopZMin, ORIG_Z_MIN_PIN)
+//IO_INPUT_PULLUP(IOEndstopZMin, ORIG_Z_MIN_PIN)
 
 IO_INPUT(IOJam1, 35)
 IO_INPUT(IOJam2, 33)
@@ -103,23 +102,30 @@ IO_INPUT_DUMMY(ControllerReset, false)
 ENDSTOP_SWITCH_HW(endstopXMin, IOEndstopXMin, X_AXIS, false)
 ENDSTOP_SWITCH_HW(endstopYMin, IOEndstopYMin, Y_AXIS, false)
 ENDSTOP_SWITCH_HW(endstopZMax, IOEndstopZMax, Z_AXIS, true)
+ENDSTOP_SWITCH_HW(endstopZMin, IOEndstopZMin, ZPROBE_AXIS, false)
 ENDSTOP_NONE(endstopXMax)
 ENDSTOP_NONE(endstopYMax)
-ENDSTOP_NONE(endstopZMin)
+//ENDSTOP_NONE(endstopZMin)
+ENDSTOP_SWITCH_HW(endstopZProbe, IOEndstopZProbe, ZPROBE_AXIS, false)
+// Servo FOR Z-PROBE
 
+IO_OUTPUT(Servo1Pin, 4)
+SERVO_ANALOG(ZProbeServo, 0, Servo1Pin, 500, 2500, 1473)
+#undef ZPROBE_ADDRESS
+#define ZPROBE_ADDRESS &endstopZProbe &endstopZMin
 // Define fans
 
-IO_OUTPUT(IOFan1, ORIG_FAN_PIN)
+IO_OUTPUT(IOFan1, ORIG_FAN2_PIN) //board fan control
 IO_PWM_SOFTWARE(Fan1NoKSPWM, IOFan1, 0)
-// IO_PWM_HARDWARE(Fan1PWM, 37,5000)
+ IO_PWM_HARDWARE(Fan1PWM, 37,5000)
 // IO_PDM_SOFTWARE(Fan1NoKSPWM, IOFan1) // alternative to PWM signals
-IO_PWM_KICKSTART(Fan1PWM, Fan1NoKSPWM, 20, 85)
-// IO_OUTPUT(IOBoardFan, HEATER_7_PIN)
-// IO_PWM_SOFTWARE(BoardFan, IOBoardFan, 4)
-// COOLER_MANAGER_MOTORS(BoardFanController, BoardFan, 0, 192,
-//                      10) // reduced max power for more silent fan
-// Define temperature sensors
+//IO_PWM_KICKSTART(Fan1PWM, Fan1NoKSPWM, 20, 85)
 
+IO_OUTPUT(IOBoardFan, ORIG_FAN_PIN)
+IO_PWM_SOFTWARE(BoardFan, IOBoardFan, 4)
+COOLER_MANAGER_MOTORS(BoardFanController, BoardFan, 90, 255, 120)
+
+// Define temperature sensors
 // Typically they require an analog input (12 bit) so define
 // them first.
 
@@ -170,13 +176,11 @@ STEPPER_TMC5160_SW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, MOSI_PIN, MISO_PI
 */
 STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 16, 1000, false, 0, -128, 12500000, endstopNone, endstopNone)
-STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 8, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, ORIG_E0_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E2_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 
 
-// Servos
-SERVO_ANALOG(ZProbeServo, 0, Servo1Pin, 500, 2500, 1050)
 
 // Heat manages are used for every component that needs to
 // control temperature. Higher level classes take these as input
