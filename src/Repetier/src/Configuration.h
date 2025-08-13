@@ -375,14 +375,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 // ################## EDIT THESE SETTINGS MANUALLY ################
 // ################ END MANUAL SETTINGS ##########################
 
-#undef Y_MIN_PIN
-#define Y_MIN_PIN -1
-#undef X_MAX_PIN
-#define X_MAX_PIN -1
-#undef Y_MAX_PIN
-#define Y_MAX_PIN ORIG_Y_MIN_PIN
-#undef Z_MAX_PIN
-#define Z_MAX_PIN -1
+
 
 #define KILL_IF_SENSOR_DEFECT 0
 #define RETRACT_ON_PAUSE 2
@@ -429,9 +422,6 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define ENDSTOP_Y_BACK_ON_HOME 0.5
 #define ENDSTOP_Z_BACK_ON_HOME 0
 #define ALWAYS_CHECK_ENDSTOPS 0
-#define X_HOME_DIR -1
-#define Y_HOME_DIR -1
-#define Z_HOME_DIR 1
 #define HOMING_FEEDRATE_X 25
 #define HOMING_FEEDRATE_Y 25
 #define HOMING_FEEDRATE_Z 25
@@ -445,7 +435,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 // Need to ensure we are above bed when using z probe
 #define FIXED_Z_HOME_POSITION 1
 #define ZHOME_X_POS 50
-#define ZHOME_Y_POS 50
+#define ZHOME_Y_POS 75
 
 // ################# XYZ movements ###################
 

@@ -29,7 +29,6 @@ IO_OUTPUT_INVERTED(IOX1Dir, ORIG_X_DIR_PIN)
 IO_OUTPUT_INVERTED(IOX1Enable, ORIG_X_ENABLE_PIN)
 
 
-
 // Y Motor
 
 IO_OUTPUT(IOY1Step, ORIG_Y_STEP_PIN)
@@ -63,7 +62,8 @@ IO_OUTPUT(Servo1Pin, 5)
 //IO_INPUT(IOEndstopXMin, ORIG_X_MIN_PIN)
  IO_INPUT_INVERTED(IOEndstopXMin, ORIG_X_MIN_PIN)
 IO_INPUT_INVERTED(IOEndstopYMin, ORIG_Y_MIN_PIN)
-IO_INPUT_PULLUP(IOEndstopZMin, ORIG_Z_MIN_PIN)
+//IO_INPUT_PULLUP(IOEndstopZMin, ORIG_Z_MIN_PIN)
+IO_INPUT_INVERTED_PULLUP(IOEndstopZMax, ORIG_Z_MAX_PIN)
 
 IO_INPUT(IOJam1, 35)
 IO_INPUT(IOJam2, 33)
@@ -101,11 +101,11 @@ IO_INPUT_DUMMY(ControllerReset, false)
 // axes except E even if you have none!
 
 ENDSTOP_SWITCH_HW(endstopXMin, IOEndstopXMin, X_AXIS, false)
+ENDSTOP_SWITCH_HW(endstopYMin, IOEndstopYMin, Y_AXIS, false)
+ENDSTOP_SWITCH_HW(endstopZMax, IOEndstopZMax, Z_AXIS, true)
 ENDSTOP_NONE(endstopXMax)
 ENDSTOP_NONE(endstopYMax)
-ENDSTOP_SWITCH_HW(endstopYMin, IOEndstopYMin, Y_AXIS, false)
-ENDSTOP_SWITCH_HW(endstopZMin, IOEndstopZMin, Z_AXIS, false)
-ENDSTOP_NONE(endstopZMax)
+ENDSTOP_NONE(endstopZMin)
 
 // Define fans
 
