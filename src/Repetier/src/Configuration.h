@@ -53,7 +53,7 @@
 #define NUM_EXTRUDER 2
 #define NUM_SERVOS 1
 #define MOTHERBOARD MOTHERBOARD_RUMBA32
-#define EEPROM_MODE 2
+#define EEPROM_MODE 1
 #define RFSERIAL SerialUSB
 #define BLUETOOTH_SERIAL -1
 #define JSON_OUTPUT 1
@@ -118,11 +118,11 @@
 // #define LIMIT_MOTORIZED_CORRECTION 0.5
 #define Z_PROBE_TYPE 3
 #define Z_PROBE_AS_ENDSTOP true
-#define Z_PROBE_HEIGHT 5        // Distance bed-nozzle when trigger switches
-#define Z_PROBE_BED_DISTANCE 10 // Optimal starting distance
-#define Z_PROBE_SPEED 5         // Speed fo z testing
+#define Z_PROBE_HEIGHT 6.05        // Distance bed-nozzle when trigger switches
+#define Z_PROBE_BED_DISTANCE 7.5 // Optimal starting distance
+#define Z_PROBE_SPEED 15         // Speed fo z testing
 #define Z_PROBE_X_OFFSET 30     // x offset relative to extruder 0,0 offset
-#define Z_PROBE_Y_OFFSET -23    // y offset relative to extruder 0,0 offset
+#define Z_PROBE_Y_OFFSET 31.5  //11.5 //-23    // y offset relative to extruder 0,0 offset
 #define Z_PROBE_COATING 0       // Coating thickness if not detected by probe
 // Extra delay before starting again. Only needed on electronic probes keeping
 // state for a while
@@ -132,7 +132,7 @@
 #define Z_PROBE_USE_MEDIAN 1
 // Minimum distance required to safely untrigger probe - used for faster
 // repeated measurement
-#define Z_PROBE_SWITCHING_DISTANCE 1
+#define Z_PROBE_SWITCHING_DISTANCE 0.5 //1
 #define Z_PROBE_BORDER 5 // Safety border to ensure position is allowed
 #define Z_PROBE_START_SCRIPT ""
 #define Z_PROBE_FINISHED_SCRIPT ""
@@ -338,7 +338,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define Z_HOME_DIR 1
 #define X_MAX_LENGTH 198
 #define Y_MAX_LENGTH 194
-#define Z_MAX_LENGTH 210
+#define Z_MAX_LENGTH 223.2
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
@@ -364,9 +364,9 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 15
 #define XAXIS_STEPS_PER_MM 80
 #define YAXIS_STEPS_PER_MM 80
-#define ZAXIS_STEPS_PER_MM 1600
-#define MAX_FEEDRATE_X 200
-#define MAX_FEEDRATE_Y 200
+#define ZAXIS_STEPS_PER_MM 800
+#define MAX_FEEDRATE_X 24000
+#define MAX_FEEDRATE_Y 24000
 #define MAX_FEEDRATE_Z 25
 //#define EXTERNALSERIAL  use Arduino serial library instead of build in.
 // Requires more ram, has only 63 byte input buffer.
@@ -429,11 +429,11 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define HOMING_FEEDRATE_Z 25
 #define HOMING_FEEDRATE_A 25
 #define ZHOME_PRE_RAISE 1
-#define ZHOME_PRE_RAISE_DISTANCE 10
+#define ZHOME_PRE_RAISE_DISTANCE 3
 #define RAISE_Z_ON_TOOLCHANGE 1
 #define ZHOME_MIN_TEMPERATURE 0
 #define ZHOME_HEAT_ALL 0
-#define ZHOME_HEIGHT 210
+#define ZHOME_HEIGHT 215
 // Need to ensure we are above bed when using z probe
 #define FIXED_Z_HOME_POSITION 1
 #define ZHOME_X_POS 50
@@ -488,7 +488,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define SD_EXTENDED_DIR 1
 #define SD_RUN_ON_STOP ""
 #define SD_STOP_HEATER_AND_MOTORS_ON_STOP 1
-#define ARC_SUPPORT 0
+#define ARC_SUPPORT 1
 #define FEATURE_MEMORY_POSITION 1
 #define FEATURE_CHECKSUM_FORCED 0
 #define UI_PRINTER_NAME "K8200 MAX"

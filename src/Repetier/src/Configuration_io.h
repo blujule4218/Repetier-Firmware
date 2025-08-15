@@ -136,12 +136,13 @@ IO_ANALOG_INPUT(IOAnalogChamber, TEMP_4_PIN, 5)
 // Need a conversion table for epcos NTC
 IO_TEMP_TABLE_NTC(TempTableatc, ATC_104GT)
 IO_TEMP_TABLE_PTC(TemptablePT100, PT100_3_3V)
+IO_TEMP_TABLE_PTC(TemptablePT1000, PT1000_4k7)
 
 // Now create the temperature inputs
 
 IO_TEMPERATURE_TABLE(TempBed1, IOAnalogBed1, TempTableatc)
-IO_TEMPERATURE_TABLE(TempExt1, IOAnalogExt1, TempTableatc)
-IO_TEMPERATURE_TABLE(TempExt2, IOAnalogExt2, TempTableatc)
+IO_TEMPERATURE_TABLE(TempExt1, IOAnalogExt1, TemptablePT1000)
+IO_TEMPERATURE_TABLE(TempExt2, IOAnalogExt2, TemptablePT1000)
 IO_TEMPERATURE_TABLE(TempChamber, IOAnalogChamber, TemptablePT100)
 // Use PWM outputs to heat. If using hardware PWM make sure
 // that the selected pin can be used as hardware pwm otherwise
@@ -174,9 +175,9 @@ STEPPER_TMC5160_SW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, MOSI_PIN, MISO_PIN
 STEPPER_TMC5160_SW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E0_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E2_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 */
-STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
-STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 16, 1000, false, 0, -128, 12500000, endstopNone, endstopNone)
-STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 8, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 8, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, ORIG_E0_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E2_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 
@@ -186,10 +187,10 @@ STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E2_CS_PIN, 0
 // control temperature. Higher level classes take these as input
 // and simple heater like a heated bed use it directly.
 
-HEAT_MANAGER_PID(HeatedBed1, 'B', 0, TempBed1, PWMBed1, 120, 255, 1000, 5, 30000, 12.0, 33.0, 290.0, 80, 255, true)
-HEAT_MANAGER_PID(HeaterExtruder1, 'E', 0, TempExt1, PWMExtruder1, 300, 255, 1000, 10, 20000, 20.0, 0.6, 65.0, 40, 220, false)
-HEAT_MANAGER_PID(HeaterExtruder2, 'E', 1, TempExt2, PWMExtruder2, 300, 255, 1000, 10, 20000, 20.0, 0.6, 65.0, 40, 220, false)
-HEAT_MANAGER_PID(HeatedChamber, 'C', 0, TempChamber, PWMChamber, 400, 255, 1000, 10, 30000, 20.0, 0.6, 65.0, 40, 220, false)
+HEAT_MANAGER_PID(HeatedBed1, 'B', 0, TempBed1, PWMBed1, 120, 255, 1000, 5, 30000, 56.93, 10.04, 80.74, 80, 255, true)
+HEAT_MANAGER_PID(HeaterExtruder1, 'E', 0, TempExt1, PWMExtruder1, 330, 255, 1000, 10, 20000, 18.61, 2.15, 40.19, 40, 220, false)
+HEAT_MANAGER_PID(HeaterExtruder2, 'E', 1, TempExt2, PWMExtruder2, 330, 255, 1000, 10, 20000, 20.0, 0.6, 65.0, 40, 220, false)
+HEAT_MANAGER_PID(HeatedChamber, 'C', 0, TempChamber, PWMChamber, 100, 255, 1000, 10, 30000, 174.17, 32.2, 235.55, 40, 220, false)
 
 // HEAT_MANAGER_DYN_DEAD_TIME(HeaterExtruder1, 'E', 0, TempExt1, PWMExtruder1, 260, 255, 100, 10, 20000, 150, 7, 7, 200, 7, 7, false)
 // HEAT_MANAGER_DYN_DEAD_TIME(HeaterExtruder2, 'E', 1, TempExt2, PWMExtruder2, 260, 255, 100, 10, 20000, 150, 7, 7, 200, 7, 7, false)
@@ -205,8 +206,8 @@ HEAT_MANAGER_PID(HeatedChamber, 'C', 0, TempChamber, PWMChamber, 400, 255, 1000,
 // Typical tools are:
 // TOOL_EXTRUDER(name, offx, offy, offz, heater, stepper, resolution, yank, maxSpeed, acceleration, advance, startScript, endScript)
 
-TOOL_EXTRUDER(ToolExtruder1, 0, 0, 0, HeaterExtruder1, /*AL1Motor */ E1Motor, 1.75, 147.0, 5, 30, 5000, 40, "M117 Extruder 1", "", &Fan1PWM)
-TOOL_EXTRUDER(ToolExtruder2, 16.775, 0.615, -0.97, HeaterExtruder2, /*AL2Motor */ E2Motor, 1.75, 147.0, 5, 30, 5000, 40, "M117 Extruder 2\nM400\nM340 P0 S1500 R600\nG4 P300", "M340 P0 S800 R600\nG4 P300", &Fan1PWM)
+TOOL_EXTRUDER(ToolExtruder1, 0, 0, 0, HeaterExtruder1, /*AL1Motor */ E1Motor, 2.85, 580.0, 5, 30, 5000, 0, "M117 Extruder 1", "", &Fan1PWM)
+TOOL_EXTRUDER(ToolExtruder2, 16.775, 0.615, -0.97, HeaterExtruder2, /*AL2Motor */ E2Motor, 2.85, 580.0, 5, 30, 5000, 0, "M117 Extruder 2\nM400\nM340 P0 S1500 R600\nG4 P300", "M340 P0 S800 R600\nG4 P300", &Fan1PWM)
 TOOL_LASER(Laser3, 0, 0, 0, Fan1NoKSPWM, fakeOut, fakeOut, 3000, 1, 100, 150.0, 1.5, "", "")
 TOOL_CNC(CNC4, 0, 0, 0, Fan1NoKSPWM, fakeOut, fakeOut, fakeOut, 7000, 3000, "", "")
 
