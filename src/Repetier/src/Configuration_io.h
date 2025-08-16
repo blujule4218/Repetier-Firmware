@@ -50,7 +50,7 @@ IO_OUTPUT_INVERTED(IOE1Enable, ORIG_E0_ENABLE_PIN)
 // E1 Motor
 
 IO_OUTPUT(IOE2Step, ORIG_E1_STEP_PIN)
-IO_OUTPUT_INVERTED(IOE2Dir, ORIG_E1_DIR_PIN)
+IO_OUTPUT(IOE2Dir, ORIG_E1_DIR_PIN)
 IO_OUTPUT_INVERTED(IOE2Enable, ORIG_E1_ENABLE_PIN)
 
 // ZProbe Servo and trigger input and output
@@ -179,7 +179,7 @@ STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.
 STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 8, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, ORIG_E0_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
-STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E2_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E1_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 
 
 
@@ -206,8 +206,8 @@ HEAT_MANAGER_PID(HeatedChamber, 'C', 0, TempChamber, PWMChamber, 100, 255, 1000,
 // Typical tools are:
 // TOOL_EXTRUDER(name, offx, offy, offz, heater, stepper, resolution, yank, maxSpeed, acceleration, advance, startScript, endScript)
 
-TOOL_EXTRUDER(ToolExtruder1, 0, 0, 0, HeaterExtruder1, /*AL1Motor */ E1Motor, 2.85, 580.0, 5, 30, 5000, 0, "M117 Extruder 1", "", &Fan1PWM)
-TOOL_EXTRUDER(ToolExtruder2, 16.775, 0.615, -0.97, HeaterExtruder2, /*AL2Motor */ E2Motor, 2.85, 580.0, 5, 30, 5000, 0, "M117 Extruder 2\nM400\nM340 P0 S1500 R600\nG4 P300", "M340 P0 S800 R600\nG4 P300", &Fan1PWM)
+TOOL_EXTRUDER(ToolExtruder1, 0, 0, 0, HeaterExtruder1, /*AL1Motor */ E1Motor, 2.85, 824.0, 5, 30, 5000, 0, "M117 Extruder 1", "", &Fan1PWM)
+TOOL_EXTRUDER(ToolExtruder2, 16.775, 0.615, -0.97, HeaterExtruder2, /*AL2Motor */ E2Motor, 2.85, 824.0, 5, 30, 5000, 0, "M117 Extruder 2\nM400\nM340 P0 S1500 R600\nG4 P300", "M340 P0 S800 R600\nG4 P300", &Fan1PWM)
 TOOL_LASER(Laser3, 0, 0, 0, Fan1NoKSPWM, fakeOut, fakeOut, 3000, 1, 100, 150.0, 1.5, "", "")
 TOOL_CNC(CNC4, 0, 0, 0, Fan1NoKSPWM, fakeOut, fakeOut, fakeOut, 7000, 3000, "", "")
 
