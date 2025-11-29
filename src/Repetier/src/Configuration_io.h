@@ -168,19 +168,20 @@ IO_PWM_SOFTWARE(PWMChamber, IOChamber, 1)
 //        STEPPER_TMC5160_SW_SPI(name, stepPin, dirPin, enablePin, mosiPin, misoPin, sckPin, csPin, rsense, chainPos, microsteps, currentMillis, stealth, hybridSpeed, stallSensitivity, fclk, minEndstop, maxEndstop)
 
 // Define all stepper motors used
-/*
+
 STEPPER_TMC5160_SW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_X_CS_PIN, 0.075, 1, 80, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Y_CS_PIN, 0.075, 1, 80, 1000, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Z_CS_PIN, 0.075, 1, 1600, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E0_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E2_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
-*/
+
+/*
 STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 8, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, ORIG_E0_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E1_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
-
+*/
 
 
 // Heat manages are used for every component that needs to
@@ -222,12 +223,12 @@ LIGHT_SOURCE_NEOPIXEL(uiBacklightDriver, UI_NEOPIXEL_PIN, NEO_GRBW, 1, uiBacklig
 // IO_INPUT_LOG(IOJam2Mon, IOJam2, true)
 // FILAMENT_DETECTOR(JamDetector1, IOJam1, ToolExtruder1)
 
-// IO_OUTPUT(caseLightPin, LED_PIN)
-// IO_PWM_HARDWARE(caseLightPWM, LED_PIN, 500)
-// LIGHT_STATE_PWM(caseLightState)
-// LIGHT_COND(caseLightState, true, Printer::caseLightMode, 255, 255, 255,           Printer::caseLightBrightness)
-// LIGHT_COND(caseLightState, GUI::statusLevel == GUIStatusLevel::ERROR,        LIGHT_STATE_BLINK_SLOW, 255, 255, 255, Printer::caseLightBrightness)
-// LIGHT_SOURCE_PWM(caseLightDriver, caseLightPWM, caseLightState)
+ IO_OUTPUT(caseLightPin, LED_PIN)
+ IO_PWM_HARDWARE(caseLightPWM, LED_PIN, 500)
+ LIGHT_STATE_PWM(caseLightState)
+ LIGHT_COND(caseLightState, true, Printer::caseLightMode, 255, 255, 255,           Printer::caseLightBrightness)
+ LIGHT_COND(caseLightState, GUI::statusLevel == GUIStatusLevel::ERROR,        LIGHT_STATE_BLINK_SLOW, 255, 255, 255, Printer::caseLightBrightness)
+ LIGHT_SOURCE_PWM(caseLightDriver, caseLightPWM, caseLightState)
 
 // Define beeper output
 #if BEEPER_PIN > -1

@@ -153,7 +153,7 @@ This makes EXP3 pin 11/12 also a serial as described in pin header above.
 //
 // Misc. Functions
 //
-#define LED_PIN PB14
+#define LED_PIN PA8
 #define BTN_PIN PC10
 #define ORIG_PS_ON_PIN PE11
 #define KILL_PIN PC5

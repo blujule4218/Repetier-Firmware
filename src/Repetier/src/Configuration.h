@@ -323,7 +323,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 // true = interpolate to 256 microsteps for smoother motion
 #define TMC_INTERPOLATE true
 // Current used when motor stands still
-#define TMC_HOLD_MULTIPLIER 0.5
+#define TMC_HOLD_MULTIPLIER 0.8
 // Reduce current on over temperature warnings by x milli ampere, 0 = disable
 #define TMC_CURRENT_STEP_DOWN 50
 // Define which data should be stored to eeprom
@@ -504,7 +504,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define UI_KEY_FIRST_REPEAT 500
 #define UI_KEY_REDUCE_REPEAT 50
 #define UI_KEY_MIN_REPEAT 50
-#define CASE_LIGHTS_PIN 25
+#define CASE_LIGHTS_PIN LED_PIN
 #define CASE_LIGHT_DEFAULT_ON 1
 #define UI_START_SCREEN_DELAY 2000
 
