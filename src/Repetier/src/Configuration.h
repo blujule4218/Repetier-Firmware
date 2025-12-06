@@ -87,7 +87,7 @@
 #define POWERLOSS_UP 0    // How much to move up if mode 1 is active
 // #################### Z-Probing #####################
 
-
+#define FEATURE_AUTOLEVEL 1
 #define Z_PROBE_Z_OFFSET_MODE 1
 #define UI_BED_COATING 1
 #define EXTRUDER_IS_Z_PROBE 0
@@ -140,6 +140,10 @@
 #define LEVELING_METHOD 1 // Grid measurement
 #define MAX_GRID_SIZE \
     6                                     // Maximum grid size allocation in memory, imported grid can be smaller
+#define DISTORTION_CORRECTION 1
+#define DISTORTION_START_DEGRADE 0.4
+#define DISTORTION_END_DEGRADE 1.8
+#define DISTORTION_UPDATE_FREQUENCY 15
 #define ENABLE_BUMP_CORRECTION 1          // CPU intensive, so only activate if required
 #define BUMP_CORRECTION_START_DEGRADE 0.5 // Until this height we correct 100%
 #define BUMP_CORRECTION_END_HEIGHT 2      // From this height on we do no correction

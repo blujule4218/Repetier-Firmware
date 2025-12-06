@@ -143,7 +143,7 @@ IO_TEMP_TABLE_PTC(TemptablePT1000, PT1000_4k7)
 IO_TEMPERATURE_TABLE(TempBed1, IOAnalogBed1, TempTableatc)
 IO_TEMPERATURE_TABLE(TempExt1, IOAnalogExt1, TemptablePT1000)
 IO_TEMPERATURE_TABLE(TempExt2, IOAnalogExt2, TemptablePT1000)
-IO_TEMPERATURE_TABLE(TempChamber, IOAnalogChamber, TemptablePT100)
+IO_TEMPERATURE_TABLE(TempChamber, IOAnalogChamber, TempTableatc)
 // Use PWM outputs to heat. If using hardware PWM make sure
 // that the selected pin can be used as hardware pwm otherwise
 // select a software pwm model whcih works on all pins.
@@ -169,8 +169,8 @@ IO_PWM_SOFTWARE(PWMChamber, IOChamber, 1)
 
 // Define all stepper motors used
 
-STEPPER_TMC5160_SW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_X_CS_PIN, 0.075, 1, 80, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
-STEPPER_TMC5160_SW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Y_CS_PIN, 0.075, 1, 80, 1000, false, 100, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_SW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_X_CS_PIN, 0.075, 1, 40, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_SW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Y_CS_PIN, 0.075, 1, 40, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Z_CS_PIN, 0.075, 1, 1600, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E0_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E2_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
@@ -191,7 +191,7 @@ STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E1_CS_PIN, 0
 HEAT_MANAGER_PID(HeatedBed1, 'B', 0, TempBed1, PWMBed1, 120, 255, 1000, 5, 30000, 56.93, 10.04, 80.74, 80, 255, true)
 HEAT_MANAGER_PID(HeaterExtruder1, 'E', 0, TempExt1, PWMExtruder1, 330, 255, 1000, 10, 20000, 18.61, 2.15, 40.19, 40, 220, false)
 HEAT_MANAGER_PID(HeaterExtruder2, 'E', 1, TempExt2, PWMExtruder2, 330, 255, 1000, 10, 20000, 20.0, 0.6, 65.0, 40, 220, false)
-HEAT_MANAGER_PID(HeatedChamber, 'C', 0, TempChamber, PWMChamber, 100, 255, 1000, 10, 30000, 174.17, 32.2, 235.55, 40, 220, false)
+HEAT_MANAGER_PID(HeatedChamber, 'C', 0, TempChamber, PWMChamber, 100, 255, 1000, 20, 240000, 174.17, 32.2, 235.55, 40, 220, false)
 
 // HEAT_MANAGER_DYN_DEAD_TIME(HeaterExtruder1, 'E', 0, TempExt1, PWMExtruder1, 260, 255, 100, 10, 20000, 150, 7, 7, 200, 7, 7, false)
 // HEAT_MANAGER_DYN_DEAD_TIME(HeaterExtruder2, 'E', 1, TempExt2, PWMExtruder2, 260, 255, 100, 10, 20000, 150, 7, 7, 200, 7, 7, false)
