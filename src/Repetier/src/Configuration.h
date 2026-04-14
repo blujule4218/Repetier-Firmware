@@ -246,7 +246,7 @@ to the position. 0 = no contribution. */
 
 #define DISABLE_X 0
 #define DISABLE_Y 0
-#define DISABLE_Z 0
+#define DISABLE_Z 1
 
 
 // Next 7 lines are required to make the following work, do not change!
@@ -406,6 +406,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
 #define PID_CONTROL_RANGE 20
 #define SKIP_M109_IF_WITHIN 5
+#define SKIP_M191_IF_WITHIN 5
 #define TEMP_HYSTERESIS 0
 #define EXTRUDE_MAXLENGTH 160
 

@@ -168,20 +168,20 @@ IO_PWM_SOFTWARE(PWMChamber, IOChamber, 1)
 //        STEPPER_TMC5160_SW_SPI(name, stepPin, dirPin, enablePin, mosiPin, misoPin, sckPin, csPin, rsense, chainPos, microsteps, currentMillis, stealth, hybridSpeed, stallSensitivity, fclk, minEndstop, maxEndstop)
 
 // Define all stepper motors used
-
+/*
 STEPPER_TMC5160_SW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_X_CS_PIN, 0.075, 1, 40, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Y_CS_PIN, 0.075, 1, 40, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_Z_CS_PIN, 0.075, 1, 1600, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E0_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_SW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, MOSI_PIN, MISO_PIN, SCK_PIN, ORIG_E2_CS_PIN, 0.075, 1, 32, 900, false, 100, -128, 12500000, endstopNone, endstopNone)
+*/
 
-/*
-STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
-STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 16, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(XMotor, IOX1Step, IOX1Dir, IOX1Enable,  ORIG_X_CS_PIN, 0.075, 1, 8, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
+STEPPER_TMC5160_HW_SPI(YMotor, IOY1Step, IOY1Dir, IOY1Enable, ORIG_Y_CS_PIN, 0.075, 1, 8, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, ORIG_Z_CS_PIN, 0.075, 1, 8, 1100, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, ORIG_E0_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
 STEPPER_TMC5160_HW_SPI(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, ORIG_E1_CS_PIN, 0.075, 1, 16, 900, false, 0, -128, 12500000, endstopNone, endstopNone)
-*/
+//STEPPER_TMC5160_HW_SPI(name,stepPin,dirPin,enablePin,csPin,rsense,chainPos,microsteps,currentMillis,stealth,hybridSpeed,stallSensitivity,fclk,minEndstop,maxEndstop) 
 
 
 // Heat manages are used for every component that needs to
